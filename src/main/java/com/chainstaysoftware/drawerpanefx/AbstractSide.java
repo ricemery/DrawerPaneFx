@@ -526,13 +526,20 @@ abstract class AbstractSide extends Pane {
          .findFirst();
    }
 
-   // TODO: Implement
+   /**
+    * Remove a {@link DrawerNode} from this side.
+    */
    void removeNode(final DrawerNode node) {
       if (node == null) {
          return;
       }
 
-      getPane().getChildren().remove(splitPane);
+      findButton(node)
+         .ifPresent(button -> {
+            toolbarHbox.getChildren().remove(button);
+            closeFloatingWindow(node);
+            splitPane.getItems().remove(node);
+         });
    }
 
    /**
@@ -733,7 +740,13 @@ abstract class AbstractSide extends Pane {
     * a single opened drawer.
     * TODO: repaint side if value changes...
     */
-   public void setAllowMultipleOpenDrawers(boolean allowMultipleOpenDrawers) {
+   void setAllowMultipleOpenDrawers(boolean allowMultipleOpenDrawers) {
       this.allowMultipleOpenDrawers = allowMultipleOpenDrawers;
+   }
+
+   List<DrawerNode> getNodes() {
+      return toolbarHbox.getChildren().stream()
+         .map(button -> (DrawerNode)button.getUserData())
+         .collect(Collectors.toList());
    }
 }

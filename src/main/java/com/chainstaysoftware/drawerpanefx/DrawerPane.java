@@ -7,7 +7,6 @@ import javafx.scene.layout.Pane;
 
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -29,10 +28,6 @@ public class DrawerPane extends Pane {
    private final VerticalSide leftSide = new VerticalSide(Position.Left, dragState);
    private final HorizontalSide bottom = new HorizontalSide(Position.Bottom, dragState);
    private final VerticalSide rightSide = new VerticalSide(Position.Right, dragState);
-   private final List<DrawerNode> topNodes = new LinkedList<>();
-   private final List<DrawerNode> rightNodes = new LinkedList<>();
-   private final List<DrawerNode> bottomNodes = new LinkedList<>();
-   private final List<DrawerNode> leftNodes = new LinkedList<>();
 
    public DrawerPane() {
       borderPane.setTop(top);
@@ -62,10 +57,7 @@ public class DrawerPane extends Pane {
          return;
       }
 
-      Arrays.stream(nodes).forEach(node -> {
-         topNodes.add(node);
-         top.addNode(node);
-      });
+      Arrays.stream(nodes).forEach(top::addNode);
    }
 
    /**
@@ -76,10 +68,7 @@ public class DrawerPane extends Pane {
          return;
       }
 
-      Arrays.stream(nodes).forEach(node -> {
-         rightNodes.add(node);
-         rightSide.addNode(node);
-      });
+      Arrays.stream(nodes).forEach(rightSide::addNode);
    }
 
    /**
@@ -90,10 +79,7 @@ public class DrawerPane extends Pane {
          return;
       }
 
-      Arrays.stream(nodes).forEach(node -> {
-         bottomNodes.add(node);
-         bottom.addNode(node);
-      });
+      Arrays.stream(nodes).forEach(bottom::addNode);
    }
 
    /**
@@ -104,38 +90,49 @@ public class DrawerPane extends Pane {
          return;
       }
 
-      Arrays.stream(nodes).forEach(node -> {
-         leftNodes.add(node);
-         leftSide.addNode(node);
-      });
+      Arrays.stream(nodes).forEach(leftSide::addNode);
+   }
+
+   /**
+    * Remove a {@link DrawerNode} from this pane.
+    */
+   public void remove(final DrawerNode node) {
+      if (node == null) {
+         return;
+      }
+
+      top.removeNode(node);
+      leftSide.removeNode(node);
+      bottom.removeNode(node);
+      rightSide.removeNode(node);
    }
 
    /**
     * Get the {@link DrawerNode}s from the top of this pane.
     */
    public List<DrawerNode> getTopNodes() {
-      return Collections.unmodifiableList(topNodes);
+      return Collections.unmodifiableList(top.getNodes());
    }
 
    /**
     * Get the {@link DrawerNode}s from the right of this pane.
     */
    public List<DrawerNode> getRightNodes() {
-      return Collections.unmodifiableList(rightNodes);
+      return Collections.unmodifiableList(rightSide.getNodes());
    }
 
    /**
     * Get the {@link DrawerNode}s from the bottom of this pane.
     */
    public List<DrawerNode> getBottomNodes() {
-      return Collections.unmodifiableList(bottomNodes);
+      return Collections.unmodifiableList(bottom.getNodes());
    }
 
    /**
     * Get the {@link DrawerNode}s from the left of this pane.
     */
    public List<DrawerNode> getLeftNodes() {
-      return Collections.unmodifiableList(leftNodes);
+      return Collections.unmodifiableList(leftSide.getNodes());
    }
 
    /**
@@ -206,10 +203,10 @@ public class DrawerPane extends Pane {
     */
    public void setNodeDisable(final DrawerNode node,
                               final boolean disable) {
-      setNodeDisable(top, topNodes, node, disable);
-      setNodeDisable(rightSide, rightNodes, node, disable);
-      setNodeDisable(bottom, bottomNodes, node, disable);
-      setNodeDisable(leftSide, leftNodes, node, disable);
+      setNodeDisable(top, getTopNodes(), node, disable);
+      setNodeDisable(rightSide, getRightNodes(), node, disable);
+      setNodeDisable(bottom, getBottomNodes(), node, disable);
+      setNodeDisable(leftSide, getLeftNodes(), node, disable);
    }
 
    /**
