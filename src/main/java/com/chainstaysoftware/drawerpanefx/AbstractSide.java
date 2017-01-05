@@ -126,9 +126,7 @@ abstract class AbstractSide extends Pane {
             toolbarHbox.getChildren().stream()
                .filter(node -> node instanceof ToggleButton)
                .findFirst()
-               .ifPresent(node -> {
-                  insertionSpacer.setPrefWidth(((ToggleButton)node).getWidth());
-               });
+               .ifPresent(node -> insertionSpacer.setPrefWidth(((ToggleButton)node).getWidth()));
             final int i = findInsertPosition(event);
             toolbarHbox.getChildren().add(i, insertionSpacer);
 
@@ -210,8 +208,8 @@ abstract class AbstractSide extends Pane {
    private void initSplitPane() {
       final EventHandler<MouseEvent> mouseHandler
          = isHorizontal()
-            ? new SplitPaneMouseHandler_ForHorizontal()
-            : new SplitPaneMouseHandler_ForVertical();
+            ? new SplitPaneMouseHandlerForHorizontal()
+            : new SplitPaneMouseHandlerForVertical();
       splitPane.setOnMouseMoved(mouseHandler);
       splitPane.setOnMouseDragged(mouseHandler);
       splitPane.setOnMousePressed(mouseHandler);
@@ -636,7 +634,7 @@ abstract class AbstractSide extends Pane {
     * {@link EventHandler} for {@link SplitPane} mouse events if this is a vertical side.
     * Used to allow resizing of side.
     */
-   private class SplitPaneMouseHandler_ForVertical implements EventHandler<MouseEvent> {
+   private class SplitPaneMouseHandlerForVertical implements EventHandler<MouseEvent> {
       private boolean mousePressed = false;
 
       @Override
@@ -649,7 +647,7 @@ abstract class AbstractSide extends Pane {
             final double x = Position.Left.equals(position)
                ? mouseEvent.getX()
                : splitPane.getWidth() + (-1 * mouseEvent.getX());
-            if (!(x / splitPane.getScene().getWidth() > MAX_PERCENTAGE_OF_SCENE)) {
+            if (x / splitPane.getScene().getWidth() <= MAX_PERCENTAGE_OF_SCENE) {
                splitPane.setPrefWidth(x);
             }
             //splitPane.setMinWidth(SPLITPANE_MIN_WIDTH);
@@ -682,7 +680,7 @@ abstract class AbstractSide extends Pane {
     * {@link EventHandler} for {@link SplitPane} mouse events if this is a horizontal side.
     * Used to allow resizing of side.
     */
-   private class SplitPaneMouseHandler_ForHorizontal implements EventHandler<MouseEvent> {
+   private class SplitPaneMouseHandlerForHorizontal implements EventHandler<MouseEvent> {
       private boolean mousePressed = false;
 
       @Override
@@ -695,7 +693,7 @@ abstract class AbstractSide extends Pane {
             final double y = Position.Top.equals(position)
                ? mouseEvent.getY()
                : splitPane.getHeight() + (-1 * mouseEvent.getY());
-            if (!(y / splitPane.getScene().getHeight() > MAX_PERCENTAGE_OF_SCENE)) {
+            if (y / splitPane.getScene().getHeight() <= MAX_PERCENTAGE_OF_SCENE) {
                splitPane.setPrefHeight(y);
             }
             //splitPane.setMinWidth(SPLITPANE_MIN_WIDTH);
