@@ -17,14 +17,14 @@ import java.util.Collections;
 /**
  * Sample app for showing how to use {@link DrawerPane}.
  */
-public class DrawerPaneTestApp extends Application {
+public class DrawerPaneSampleApp extends Application {
    public static void main(String[] args) {
       launch(args);
    }
 
    @Override
    public void start(final Stage primaryStage) throws Exception {
-      primaryStage.setTitle("Drawer Pane Test");
+      primaryStage.setTitle("DrawerPaneFx Sample App");
 
       // Initialize the DrawerPane CSS. Should be done before
       // the DrawerPane is displayed.
