@@ -171,9 +171,21 @@ abstract class AbstractSide extends Pane {
 
             // Insert the dragged node into the new location.
             final int i = findInsertPosition(event);
-            toolbarHbox.getChildren().add(i, createButton(drawerNode));
+            final ToggleButton newButton = createButton(drawerNode);
+            toolbarHbox.getChildren().add(i, newButton);
 
             dragState.setDraggedNode(null);
+
+            // Close open drawers if only allow single open.
+            if (!allowMultipleOpenDrawers) {
+               splitPane.getItems().clear();
+               // Toggle buttons off.
+               toolbarHbox.getChildren()
+                  .stream()
+                  .filter(btn -> !newButton.equals(btn)
+                     && !((DrawerNode)btn.getUserData()).isFloating())
+                  .forEach(btn -> ((ToggleButton)btn).setSelected(false));
+            }
 
             // Update the split pane to include the dragged node
             // in the correct location (if visible and not floating.
@@ -453,13 +465,14 @@ abstract class AbstractSide extends Pane {
 
    /**
     * Dock a {@link DrawerNode} within this side's {@link SplitPane} at
-    * the apporpriate location.
+    * the appropriate location.
     */
    private void dockWindow(final DrawerNode node) {
       closeFloatingWindow(node);
 
       if (!allowMultipleOpenDrawers) {
          splitPane.getItems().clear();
+         // Toggle buttons off.
          final Optional<ToggleButton> nodeButton = findButton(node);
          toolbarHbox.getChildren()
             .stream()
