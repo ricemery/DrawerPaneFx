@@ -1,7 +1,6 @@
 package com.chainstaysoftware.drawerpanefx;
 
 import javafx.scene.Node;
-import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
@@ -66,7 +65,7 @@ public class DrawerNode extends Pane {
 
       final VBox vBox = new VBox();
       vBox.setId("DrawerNodeVbox-" + title);
-      vBox.getChildren().addAll(new Label(title), contents);
+      vBox.getChildren().addAll(contents);
 
       getChildren().add(vBox);
    }
