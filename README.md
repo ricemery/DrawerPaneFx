@@ -21,13 +21,13 @@
  can optionally be disabled/enabled independently. And, the toolbars
  and buttons can be styled using CSS.
  
- ## Dependencies
- * None for library.
- * Icons from Icons8 - https://icons8.com - for the sample application.
+## Dependencies
+* None for library.
+* Icons from Icons8 - https://icons8.com - for the sample application.
  
- ## Requires
- * Java 8 or newer.
+## Requires
+* Java 8 or newer.
  
- ## Usage
+## Usage
  
- There is a sample application that shows usage of the DrawerPaneFx features - `com.chainstaysoftware.drawerpanefx.DrawerPaneSampleApp.java`.
+There is a sample application that shows usage of the DrawerPaneFx features - `com.chainstaysoftware.drawerpanefx.DrawerPaneSampleApp.java`.
