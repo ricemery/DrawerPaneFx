@@ -8,6 +8,7 @@ import javafx.scene.layout.Pane;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Base class for JavaFx layout Pane that provides supports for drawers
@@ -94,6 +95,21 @@ public class DrawerPane extends Pane {
    }
 
    /**
+    * Reveals a hidden node on whatever side the
+    * {@link DrawerNode} is bound to (or floating).
+    */
+   public void show(final DrawerNode node) {
+      getContainingSide(node).ifPresent(side -> side.showNode(node));
+   }
+
+   /**
+    * Hides an opened {@link DrawerNode}.
+    */
+   public void hide(final DrawerNode node) {
+      getContainingSide(node).ifPresent(side -> side.hideNode(node));
+   }
+
+   /**
     * Remove a {@link DrawerNode} from this pane.
     */
    public void remove(final DrawerNode node) {
@@ -101,10 +117,31 @@ public class DrawerPane extends Pane {
          return;
       }
 
-      top.removeNode(node);
-      leftSide.removeNode(node);
-      bottom.removeNode(node);
-      rightSide.removeNode(node);
+      getContainingSide(node).ifPresent(side -> side.removeNode(node));
+   }
+
+   /**
+    * Determines the {@link AbstractSide} that the passed in {@link DrawerNode}
+    * is contained within.
+    */
+   private Optional<AbstractSide> getContainingSide(final DrawerNode node) {
+      if (getTopNodes().contains(node)) {
+         return Optional.of(top);
+      }
+
+      if (getRightNodes().contains(node)) {
+         return Optional.of(rightSide);
+      }
+
+      if (getBottomNodes().contains(node)) {
+         return Optional.of(bottom);
+      }
+
+      if (getLeftNodes().contains(node)) {
+         return Optional.of(leftSide);
+      }
+
+      return Optional.empty();
    }
 
    /**

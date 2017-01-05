@@ -343,7 +343,7 @@ abstract class AbstractSide extends Pane {
                dockWindow(node);
             }
          } else {
-            hideWindow(node);
+            hideNodeInternal(node);
          }
       }
    }
@@ -427,7 +427,7 @@ abstract class AbstractSide extends Pane {
 
             findButton(node).ifPresent(toggleButton -> {
                if (toggleButton.isSelected()) {
-                  showWindow(node);
+                  showNodeInternal(node);
                }
             });
          });
@@ -438,10 +438,25 @@ abstract class AbstractSide extends Pane {
       return contextMenu;
    }
 
+   void showNode(final DrawerNode node) {
+      if (node == null) {
+         return;
+      }
+
+      findButton(node).ifPresent(button -> {
+         if (button.isDisabled()) {
+            return;
+
+         }
+         button.setSelected(true);
+      });
+   }
+
    /**
-    * Show a {@link DrawerNode}.
+    * Show a {@link DrawerNode}. Assumes that the associated button
+    * is selected.
     */
-   private void showWindow(final DrawerNode node) {
+   private void showNodeInternal(final DrawerNode node) {
       if (node.isFloating()) {
          floatWindow(node);
       } else {
@@ -483,10 +498,15 @@ abstract class AbstractSide extends Pane {
       splitPane.getItems().add(findInsertPosition(node), node);
    }
 
+   void hideNode(final DrawerNode node) {
+      findButton(node).ifPresent(button -> button.setSelected(false));
+   }
+
    /**
-    * Hide a {@link DrawerNode}.
+    * Hide a {@link DrawerNode}. Assumes the associated button is
+    * already unselected.
     */
-   private void hideWindow(final DrawerNode node) {
+   private void hideNodeInternal(final DrawerNode node) {
       closeFloatingWindow(node);
 
       node.setVisible(false);
@@ -509,7 +529,7 @@ abstract class AbstractSide extends Pane {
    public void disable(final DrawerNode node,
                        final boolean disable) {
       if (disable) {
-         hideWindow(node);
+         hideNodeInternal(node);
       }
 
       findButton(node).ifPresent(b -> b.setDisable(disable));
