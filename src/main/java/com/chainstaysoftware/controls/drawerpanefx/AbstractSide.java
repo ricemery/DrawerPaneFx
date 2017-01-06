@@ -33,7 +33,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 /**
  * Abstract Child Pane to hold onto {@link DrawerNode} instances that are
@@ -585,13 +584,19 @@ abstract class AbstractSide extends Pane {
     * within the {@link ToolBar}.
     */
    private int findInsertPosition(final DrawerNode node) {
-      final List<Node> buttons = toolbarHbox.getChildren();
-      final int numButtons = buttons.size();
-      return Math.min(IntStream.range(0, numButtons)
-            .filter(i -> buttons.get(i).getUserData().equals(node))
-            .findFirst()
-            .orElse(0),
-         splitPane.getItems().size());
+      int j = 0;
+      for (Node btn : toolbarHbox.getChildren()) {
+         final ToggleButton button = (ToggleButton)btn;
+         if (button.getUserData() == node) {
+            return j;
+         }
+
+         if (splitPane.getItems().contains(button.getUserData())) {
+            j++;
+         }
+      }
+
+      return j;
    }
 
    /**
