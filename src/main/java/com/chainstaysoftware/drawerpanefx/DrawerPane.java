@@ -1,7 +1,7 @@
 package com.chainstaysoftware.drawerpanefx;
 
-import com.sun.javafx.css.StyleManager;
 import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 
@@ -262,8 +262,7 @@ public class DrawerPane extends Pane {
    /**
     * Helper function to load the default style sheet of DrawerPane.
     */
-   public static void initializeDefaultUserAgentStylesheet() {
-      StyleManager.getInstance()
-         .addUserAgentStylesheet(DrawerPane.class.getResource("drawerpanefx.css").toExternalForm());
+   public void initDefaultStyleSheet(final Scene scene) {
+      scene.getStylesheets().add(DrawerPane.class.getResource("drawerpanefx.css").toExternalForm());
    }
 }

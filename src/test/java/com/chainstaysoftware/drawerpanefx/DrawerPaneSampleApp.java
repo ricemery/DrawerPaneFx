@@ -37,9 +37,6 @@ public class DrawerPaneSampleApp extends Application {
    public void start(final Stage primaryStage) throws Exception {
       primaryStage.setTitle("DrawerPaneFx Sample App");
 
-      // Initialize the DrawerPane CSS. Should be done before
-      // the DrawerPane is displayed.
-      DrawerPane.initializeDefaultUserAgentStylesheet();
       final DrawerPane drawerPane = new DrawerPane();
       // Hide the top of the DrawerPane.
       drawerPane.setTopVisible(false);
@@ -56,8 +53,14 @@ public class DrawerPaneSampleApp extends Application {
       borderPane.prefWidthProperty().bind(primaryStage.widthProperty());
       borderPane.prefHeightProperty().bind(primaryStage.heightProperty());
 
+      final Scene scene = new Scene(borderPane, 800, 600);
+
+      // Initialize the DrawerPane CSS. Should be done before
+      // the DrawerPane is displayed.
+      drawerPane.initDefaultStyleSheet(scene);
+
       // Show the scene.
-      primaryStage.setScene(new Scene(borderPane, 800, 600));
+      primaryStage.setScene(scene);
       primaryStage.sizeToScene();
       primaryStage.show();
    }

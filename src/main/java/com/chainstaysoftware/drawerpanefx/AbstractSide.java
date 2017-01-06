@@ -24,6 +24,7 @@ import javafx.scene.input.TransferMode;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
+import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.transform.Rotate;
 import javafx.stage.Stage;
@@ -42,7 +43,7 @@ abstract class AbstractSide extends Pane {
    // TODO: Allow setting max/min percentage of scene??
    //private static final int SPLITPANE_MIN_WIDTH = 100;
    private static final double MAX_PERCENTAGE_OF_SCENE = .30;
-   private static final int EDGE_EPSILON = 5;
+   private static final int DIVIDER_WIDTH = 5;
    private static final ResourceBundle resourceBundle = ResourceBundle.getBundle("drawerpanefx");
 
    // Toolbar to contain the show/hide buttons for contained drawers.
@@ -50,6 +51,7 @@ abstract class AbstractSide extends Pane {
    private final HBox toolbarHbox = new HBox();
    // SplitPane to contain visible non-floating drawers,
    private final SplitPane splitPane = new SplitPane();
+   private final Divider divider;
 
    private final Position position;
    private final DragState dragState;
@@ -62,6 +64,7 @@ abstract class AbstractSide extends Pane {
 
       this.position = position;
       this.dragState = dragState;
+      this.divider = new Divider();
    }
 
    /**
@@ -74,6 +77,7 @@ abstract class AbstractSide extends Pane {
       toolbarHbox.setRotate(getRotation());
 
       initToolbar();
+      initDivider();
 
       getPane().getChildren().addAll(toolBar);
 
@@ -82,7 +86,7 @@ abstract class AbstractSide extends Pane {
       initSplitPane();
       setClippingRegion();
 
-      insertionSpacer.getStyleClass().add("drawerpanefx.spacer");
+      insertionSpacer.getStyleClass().add("drawerpanefx-spacer");
    }
 
    /**
@@ -94,8 +98,8 @@ abstract class AbstractSide extends Pane {
       toolBar.getItems().add(toolbarGroup);
       toolBar.setOrientation(Orientation.VERTICAL);
       toolBar.getStyleClass().setAll(isHorizontal()
-         ? "drawerpanefx.horizontal.toolbar"
-         : "drawerpanefx.vertical.toolbar");
+         ? "drawerpanefx-horizontal-toolbar"
+         : "drawerpanefx-vertical-toolbar");
 
       if (isHorizontal()) {
          toolBar.setMinHeight(10);
@@ -206,14 +210,6 @@ abstract class AbstractSide extends Pane {
     * Initialize the {@link SplitPane}.
     */
    private void initSplitPane() {
-      final EventHandler<MouseEvent> mouseHandler
-         = isHorizontal()
-            ? new SplitPaneMouseHandlerForHorizontal()
-            : new SplitPaneMouseHandlerForVertical();
-      splitPane.setOnMouseMoved(mouseHandler);
-      splitPane.setOnMouseDragged(mouseHandler);
-      splitPane.setOnMousePressed(mouseHandler);
-      splitPane.setOnMouseReleased(mouseHandler);
       splitPane.setOrientation(getOrientation());
       splitPane.getItems().addListener(new SplitPaneItemChangeListener());
    }
@@ -229,13 +225,14 @@ abstract class AbstractSide extends Pane {
          final int numItems = splitPane.getItems().size();
          if (numItems == 0) {
             getPane().getChildren().remove(splitPane);
+            getPane().getChildren().remove(divider);
             return;
          }
 
          if (Position.Top.equals(position) || Position.Left.equals(position)) {
-            getPane().getChildren().setAll(toolBar, splitPane);
+            getPane().getChildren().setAll(toolBar, splitPane, divider);
          } else if (Position.Bottom.equals(position) || Position.Right.equals(position)) {
-            getPane().getChildren().setAll(splitPane, toolBar);
+            getPane().getChildren().setAll(divider, splitPane, toolBar);
          }
 
          final double percent = 1.0 / numItems;
@@ -307,8 +304,8 @@ abstract class AbstractSide extends Pane {
       // off focus traversable works around this issue.
       button.setFocusTraversable(false);
       button.getStyleClass().add(isHorizontal()
-         ? "drawerpanefx.horizontal.button"
-         : "drawerpanefx.vertical.button");
+         ? "drawerpanefx-horizontal-button"
+         : "drawerpanefx-vertical-button");
 
       if (node.canFloat()) {
          button.setContextMenu(createButtonContextMenu(node));
@@ -658,104 +655,6 @@ abstract class AbstractSide extends Pane {
    }
 
    /**
-    * {@link EventHandler} for {@link SplitPane} mouse events if this is a vertical side.
-    * Used to allow resizing of side.
-    */
-   private class SplitPaneMouseHandlerForVertical implements EventHandler<MouseEvent> {
-      private boolean mousePressed = false;
-
-      @Override
-      public void handle(final MouseEvent mouseEvent) {
-         if (mouseEvent.getEventType().equals(MouseEvent.MOUSE_PRESSED)
-            && isMouseOnEdge(mouseEvent)) {
-            mousePressed = true;
-         } else if (mouseEvent.getEventType().equals(MouseEvent.MOUSE_DRAGGED)
-            && mousePressed) {
-            final double x = Position.Left.equals(position)
-               ? mouseEvent.getX()
-               : splitPane.getWidth() + (-1 * mouseEvent.getX());
-            if (x / splitPane.getScene().getWidth() <= MAX_PERCENTAGE_OF_SCENE) {
-               splitPane.setPrefWidth(x);
-            }
-            //splitPane.setMinWidth(SPLITPANE_MIN_WIDTH);
-         } else if (mouseEvent.getEventType().equals(MouseEvent.MOUSE_RELEASED)) {
-            mousePressed = false;
-            splitPane.cursorProperty().set(null);
-         } else if (mouseEvent.getEventType().equals(MouseEvent.MOUSE_MOVED)) {
-            splitPane.cursorProperty().set(isMouseOnEdge(mouseEvent)
-               ? Cursor.H_RESIZE
-               : null);
-         }
-      }
-
-      private boolean isMouseOnEdge(final MouseEvent mouseEvent) {
-         return Position.Left.equals(position)
-            ? isMouseOnRightEdge(mouseEvent)
-            : isMouseOnLeftEdge(mouseEvent);
-      }
-
-      private boolean isMouseOnRightEdge(final MouseEvent mouseEvent) {
-         return epsilonEquals(splitPane.getWidth(), mouseEvent.getX(), EDGE_EPSILON);
-      }
-
-      private boolean isMouseOnLeftEdge(final MouseEvent mouseEvent) {
-         return epsilonEquals(0, mouseEvent.getX(), EDGE_EPSILON);
-      }
-   }
-
-   /**
-    * {@link EventHandler} for {@link SplitPane} mouse events if this is a horizontal side.
-    * Used to allow resizing of side.
-    */
-   private class SplitPaneMouseHandlerForHorizontal implements EventHandler<MouseEvent> {
-      private boolean mousePressed = false;
-
-      @Override
-      public void handle(final MouseEvent mouseEvent) {
-         if (mouseEvent.getEventType().equals(MouseEvent.MOUSE_PRESSED)
-            && isMouseOnEdge(mouseEvent)) {
-            mousePressed = true;
-         } else if (mouseEvent.getEventType().equals(MouseEvent.MOUSE_DRAGGED)
-            && mousePressed) {
-            final double y = Position.Top.equals(position)
-               ? mouseEvent.getY()
-               : splitPane.getHeight() + (-1 * mouseEvent.getY());
-            if (y / splitPane.getScene().getHeight() <= MAX_PERCENTAGE_OF_SCENE) {
-               splitPane.setPrefHeight(y);
-            }
-            //splitPane.setMinWidth(SPLITPANE_MIN_WIDTH);
-         } else if (mouseEvent.getEventType().equals(MouseEvent.MOUSE_RELEASED)) {
-            mousePressed = false;
-            splitPane.cursorProperty().set(null);
-         } else if (mouseEvent.getEventType().equals(MouseEvent.MOUSE_MOVED)) {
-            splitPane.cursorProperty().set(isMouseOnEdge(mouseEvent)
-               ? Cursor.V_RESIZE
-               : null);
-         }
-      }
-
-      private boolean isMouseOnEdge(final MouseEvent mouseEvent) {
-         return Position.Left.equals(position)
-            ? isMouseOnBottomEdge(mouseEvent)
-            : isMouseOnTopEdge(mouseEvent);
-      }
-
-      private boolean isMouseOnBottomEdge(final MouseEvent mouseEvent) {
-         return epsilonEquals(splitPane.getHeight(), mouseEvent.getY(), EDGE_EPSILON);
-      }
-
-      private boolean isMouseOnTopEdge(final MouseEvent mouseEvent) {
-         return epsilonEquals(0, mouseEvent.getY(), EDGE_EPSILON);
-      }
-   }
-
-   private boolean epsilonEquals(final double val1,
-                                 final double val2,
-                                 final double epsilon) {
-      return (val1 == val2) || Math.abs(val1 - val2) < epsilon;
-   }
-
-   /**
     * Call to indicate if this side supports multiple opened drawers or
     * a single opened drawer.
     * TODO: repaint side if value changes...
@@ -768,5 +667,95 @@ abstract class AbstractSide extends Pane {
       return toolbarHbox.getChildren().stream()
          .map(button -> (DrawerNode)button.getUserData())
          .collect(Collectors.toList());
+   }
+
+   private void initDivider() {
+      if (isHorizontal()) {
+         divider.prefWidthProperty().bind(widthProperty());
+         divider.setPrefHeight(DIVIDER_WIDTH);
+      } else {
+         divider.setPrefWidth(DIVIDER_WIDTH);
+         divider.prefHeightProperty().bind(heightProperty());
+      }
+   }
+
+   /**
+    * Divider for dividing Side from Center of {@link DrawerPane}.
+    * Includes mouse handling for resizing the Side.
+    */
+   private class Divider extends StackPane {
+      Divider() {
+         getStyleClass().setAll(isHorizontal()
+            ? "drawerpanefx-horizontal-divider"
+            : "drawerpanefx-vertical-divider");
+         setCursor(isHorizontal() ? Cursor.V_RESIZE : Cursor.H_RESIZE);
+
+         final EventHandler<MouseEvent> mouseHandler
+            = isHorizontal()
+               ? new MouseHandlerForHorizontal()
+               : new MouseHandlerForVertical();
+         setOnMouseMoved(mouseHandler);
+         setOnMouseDragged(mouseHandler);
+         setOnMousePressed(mouseHandler);
+         setOnMouseReleased(mouseHandler);
+      }
+
+      /**
+       * {@link EventHandler} for {@link SplitPane} mouse events if this is a vertical side.
+       * Used to allow resizing of side.
+       */
+      private class MouseHandlerForVertical implements EventHandler<MouseEvent> {
+         private boolean mousePressed = false;
+
+         @Override
+         public void handle(final MouseEvent mouseEvent) {
+            if (mouseEvent.getEventType().equals(MouseEvent.MOUSE_PRESSED)) {
+               mousePressed = true;
+            } else if (mouseEvent.getEventType().equals(MouseEvent.MOUSE_DRAGGED)
+               && mousePressed) {
+               final Bounds bounds = Divider.this.localToScene(Divider.this.getLayoutBounds());
+               final double mouseX = mouseEvent.getSceneX();
+               final double xDelta = mouseX - bounds.getMinX();
+               final double updatedWidth = splitPane.getWidth() + xDelta
+                  * (Position.Right.equals(position) ? -1 : 1);
+
+               if (updatedWidth / splitPane.getScene().getWidth() <= MAX_PERCENTAGE_OF_SCENE) {
+                  splitPane.setPrefWidth(updatedWidth);
+               }
+               //splitPane.setMinWidth(SPLITPANE_MIN_WIDTH);
+            } else if (mouseEvent.getEventType().equals(MouseEvent.MOUSE_RELEASED)) {
+               mousePressed = false;
+            }
+         }
+      }
+
+      /**
+       * {@link EventHandler} for {@link SplitPane} mouse events if this is a horizontal side.
+       * Used to allow resizing of side.
+       */
+      private class MouseHandlerForHorizontal implements EventHandler<MouseEvent> {
+         private boolean mousePressed = false;
+
+         @Override
+         public void handle(final MouseEvent mouseEvent) {
+            if (mouseEvent.getEventType().equals(MouseEvent.MOUSE_PRESSED)) {
+               mousePressed = true;
+            } else if (mouseEvent.getEventType().equals(MouseEvent.MOUSE_DRAGGED)
+               && mousePressed) {
+               final Bounds bounds = Divider.this.localToScene(Divider.this.getLayoutBounds());
+               final double mouseY = mouseEvent.getSceneY();
+               final double yDelta = mouseY - bounds.getMinY();
+               final double updatedHeight = splitPane.getHeight() + yDelta
+                  * (Position.Bottom.equals(position) ? -1 : 1);
+
+               if (updatedHeight / splitPane.getScene().getHeight() <= MAX_PERCENTAGE_OF_SCENE) {
+                  splitPane.setPrefHeight(updatedHeight);
+               }
+               //splitPane.setMinWidth(SPLITPANE_MIN_WIDTH);
+            } else if (mouseEvent.getEventType().equals(MouseEvent.MOUSE_RELEASED)) {
+               mousePressed = false;
+            }
+         }
+      }
    }
 }
