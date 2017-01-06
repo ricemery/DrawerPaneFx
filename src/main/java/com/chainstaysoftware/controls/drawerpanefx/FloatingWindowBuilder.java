@@ -16,9 +16,11 @@ class FloatingWindowBuilder {
     */
    Stage create(final Window parent,
                 final DrawerNode node) {
-      // TODO: Style, re dock?
       final Pane pane = new Pane(node);
       final Scene scene = new Scene(pane);
+
+      node.getFloatStyleSheet().ifPresent(ss ->
+         scene.getStylesheets().add(ss.toExternalForm()));
 
       final Stage stage = createStage(parent, node);
       stage.setScene(scene);

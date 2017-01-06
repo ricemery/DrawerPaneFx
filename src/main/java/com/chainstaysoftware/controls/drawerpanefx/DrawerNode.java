@@ -5,8 +5,10 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 
+import java.net.URL;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Base class for a node that provides content to include within a
@@ -19,6 +21,7 @@ public class DrawerNode extends Pane {
    private final String title;
    private final Image icon;
    private final boolean canFloat;
+   private final URL floatStyleSheet;
    private final List<Position> validPositions;
 
    private boolean isFloating;
@@ -30,7 +33,7 @@ public class DrawerNode extends Pane {
     */
    public DrawerNode(final Node contents,
                      final String title) {
-      this(contents, title, null, true, Collections.emptyList());
+      this(contents, title, null, true, null, Collections.emptyList());
    }
 
    /**
@@ -39,15 +42,17 @@ public class DrawerNode extends Pane {
     * @param title Title to show on the drawer show/hide button.
     * @param icon Icon to show on the drawer show/hide button. Can be null.
     * @param canFloat True if the contents can be detached from the {@link DrawerPane}
-    *                 and contained within its own window.
+*                 and contained within its own window.
+    * @param floatStyleSheet URL to style sheet to attach to scene when
+    *                        the {@link DrawerNode} is floating. Null indicates none.
     * @param validPositions List of sides that this {@link DrawerNode} can
     *                       be positioned at. Empty list indicates that all
-    *                       sides are allowed.
     */
    public DrawerNode(final Node contents,
                      final String title,
                      final Image icon,
                      final boolean canFloat,
+                     final URL floatStyleSheet,
                      final List<Position> validPositions) {
       if (contents == null) {
          throw new IllegalArgumentException("contents must not be null");
@@ -61,6 +66,7 @@ public class DrawerNode extends Pane {
       this.title = title;
       this.icon = icon;
       this.canFloat = canFloat;
+      this.floatStyleSheet = floatStyleSheet;
       this.validPositions = Collections.unmodifiableList(validPositions);
 
       final VBox vBox = new VBox();
@@ -115,6 +121,10 @@ public class DrawerNode extends Pane {
     */
    public boolean canFloat() {
       return canFloat;
+   }
+
+   public Optional<URL> getFloatStyleSheet() {
+      return Optional.ofNullable(floatStyleSheet);
    }
 
    /**

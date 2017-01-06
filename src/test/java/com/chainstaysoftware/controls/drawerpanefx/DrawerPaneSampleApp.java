@@ -79,14 +79,14 @@ public class DrawerPaneSampleApp extends Application {
       final TextArea textArea1 = new TextArea("area1");
       textArea1.setPrefWidth(50);
       textDrawerNode1 = new DrawerNode(textArea1, "textArea1", getIcon("/icons8/1-32.png"), true,
-         Arrays.asList(Position.Top, Position.Right, Position.Bottom, Position.Left));
+         null, Arrays.asList(Position.Top, Position.Right, Position.Bottom, Position.Left));
 
       // Create a DrawerNode that can only be moved to the left or right sides.
       // Initial state is open. Can be floated.
       final TextArea textArea2 = new TextArea("area2");
       textArea2.setPrefWidth(50);
       textDrawerNode2 = new DrawerNode(textArea2, "textArea2", getIcon("/icons8/2-32.png"), true,
-         Arrays.asList(Position.Right, Position.Left));
+         null, Arrays.asList(Position.Right, Position.Left));
 
       drawerPane.addLeft(textDrawerNode1, textDrawerNode2);
    }
@@ -97,7 +97,7 @@ public class DrawerPaneSampleApp extends Application {
       final TextArea textArea3 = new TextArea("area3");
       textArea3.setPrefWidth(50);
       textDrawerNode3 = new DrawerNode(textArea3, "textArea3", getIcon("/icons8/3-32.png"), true,
-      Arrays.asList(Position.Top, Position.Right, Position.Bottom, Position.Left));
+         null, Arrays.asList(Position.Top, Position.Right, Position.Bottom, Position.Left));
 
       drawerPane.addRight(textDrawerNode3);
    }
@@ -108,21 +108,21 @@ public class DrawerPaneSampleApp extends Application {
       final TextArea textArea4 = new TextArea("area4");
       textArea4.setPrefWidth(50);
       textDrawerNode4 = new DrawerNode(textArea4, "textArea4", getIcon("/icons8/4-32.png"), true,
-      Collections.emptyList());
+         null, Collections.emptyList());
 
       // Create a DrawerNode that can be moved to any side.
       // Can be floated. DrawerNode will be disabled below.
       final TextArea textArea5 = new TextArea("area5");
       textArea5.setPrefWidth(50);
       textDrawerNode5 = new DrawerNode(textArea5, "textArea5", getIcon("/icons8/5-32.png"), true,
-      Arrays.asList(Position.Top, Position.Right, Position.Bottom, Position.Left));
+         null, Arrays.asList(Position.Top, Position.Right, Position.Bottom, Position.Left));
 
       // Create a DrawerNode that can be moved to any side. Initial state is closed.
       // Can not be floated.
       final TextArea textArea6 = new TextArea("area6");
       textArea6.setPrefWidth(50);
       textDrawerNode6 = new DrawerNode(textArea6, "textArea6", getIcon("/icons8/6-32.png"), false,
-      Arrays.asList(Position.Bottom));
+         null, Arrays.asList(Position.Bottom));
       textDrawerNode6.setVisible(false);
 
       drawerPane.addBottom(textDrawerNode4, textDrawerNode5, textDrawerNode6);
