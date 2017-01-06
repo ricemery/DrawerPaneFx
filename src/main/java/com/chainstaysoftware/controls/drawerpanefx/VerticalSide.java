@@ -1,4 +1,4 @@
-package com.chainstaysoftware.drawerpanefx;
+package com.chainstaysoftware.controls.drawerpanefx;
 
 import javafx.geometry.Orientation;
 import javafx.scene.layout.HBox;

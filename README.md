@@ -30,4 +30,4 @@
  
 ## Usage
  
-There is a sample application that shows usage of the DrawerPaneFx features - `com.chainstaysoftware.drawerpanefx.DrawerPaneSampleApp.java`.
+There is a sample application that shows usage of the DrawerPaneFx features - `com.chainstaysoftware.controls.drawerpanefx.DrawerPaneSampleApp.java`.

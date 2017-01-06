@@ -1,4 +1,4 @@
-package com.chainstaysoftware.drawerpanefx;
+package com.chainstaysoftware.controls.drawerpanefx;
 
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;

@@ -1,4 +1,4 @@
-package com.chainstaysoftware.drawerpanefx;
+package com.chainstaysoftware.controls.drawerpanefx;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;

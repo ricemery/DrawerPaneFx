@@ -1,4 +1,4 @@
-package com.chainstaysoftware.drawerpanefx;
+package com.chainstaysoftware.controls.drawerpanefx;
 
 /**
  * Used to hold onto {@link DrawerNode} instance that is

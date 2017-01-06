@@ -1,4 +1,4 @@
-package com.chainstaysoftware.drawerpanefx;
+package com.chainstaysoftware.controls.drawerpanefx;
 
 /**
  * Positions that a {@link DrawerNode} can be placed within a

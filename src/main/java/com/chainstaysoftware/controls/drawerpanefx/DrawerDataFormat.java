@@ -1,4 +1,4 @@
-package com.chainstaysoftware.drawerpanefx;
+package com.chainstaysoftware.controls.drawerpanefx;
 
 import javafx.scene.input.DataFormat;
 
@@ -8,7 +8,7 @@ import javafx.scene.input.DataFormat;
  */
 public class DrawerDataFormat {
    public static final DataFormat CLIPBOARD_CONTENT_FORMAT
-      = new DataFormat("com.chainstaysoftware.drawerpanefx.DrawerDataFormat");
+      = new DataFormat("com.chainstaysoftware.controls.drawerpanefx.DrawerDataFormat");
 
    private DrawerDataFormat() {}
 }
