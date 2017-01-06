@@ -369,6 +369,9 @@ abstract class AbstractSide extends Pane {
          db.setContent(clipboardContent);
          db.setDragView(button.snapshot(snapshotParameters, null));
          dragState.setDraggedNode(node);
+         dragState.setInitialPosition(toolbarHbox.getChildren().indexOf(button));
+
+         toolbarHbox.getChildren().remove(button);
 
          event.consume();
       }
@@ -393,12 +396,29 @@ abstract class AbstractSide extends Pane {
       @Override
       public void handle(final DragEvent event) {
           if (!TransferMode.MOVE.equals(event.getTransferMode())) {
-             return;
+             handleNotDropped();
+          } else {
+             handleDropped();
           }
+      }
 
-          if (toolbarHbox.getChildren().remove(button)) {
-             splitPane.getItems().remove(node);
-          }
+      private void handleDropped() {
+         splitPane.getItems().remove(node);
+      }
+
+      private void handleNotDropped() {
+         // Not dropped on a toolbar...
+         // add the button back to the toolbar.
+         toolbarHbox.getChildren().add(dragState.getInitialPosition(), button);
+
+         // If the node canFloat, and not dropped on a toolbar then
+         // float the node.
+         if (node.canFloat()) {
+            button.getContextMenu().getItems().stream()
+               .filter(menuItem -> menuItem.getText().equals(resourceBundle.getString("floatingmode.menuitem.txt")))
+               .findFirst()
+               .ifPresent(menuItem -> ((CheckMenuItem)menuItem).setSelected(true));
+         }
       }
    }
 

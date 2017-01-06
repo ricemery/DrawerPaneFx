@@ -6,12 +6,21 @@ package com.chainstaysoftware.drawerpanefx;
  */
 class DragState {
    private DrawerNode draggedNode;
+   private int initialPosition;
 
-   synchronized DrawerNode getDraggedNode() {
+   DrawerNode getDraggedNode() {
       return draggedNode;
    }
 
-   synchronized void setDraggedNode(final DrawerNode draggedNode) {
+   void setDraggedNode(final DrawerNode draggedNode) {
       this.draggedNode = draggedNode;
+   }
+
+   int getInitialPosition() {
+      return initialPosition;
+   }
+
+   void setInitialPosition(final int initialPosition) {
+      this.initialPosition = initialPosition;
    }
 }
