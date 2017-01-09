@@ -169,8 +169,26 @@ public class DrawerPaneSampleApp extends Application {
       final Menu hideMenu = new Menu("Hide");
       hideMenu.getItems().addAll(hideItem1, hideItem2, hideItem3, hideItem4, hideItem5, hideItem6);
 
+
+      final MenuItem enableItem1 = new MenuItem("Enable/Disable textArea1");
+      enableItem1.setOnAction(actionEvent -> drawerPane.setNodeDisable(textDrawerNode1, !textDrawerNode1.isDisable()));
+      final MenuItem enableItem2 = new MenuItem("Enable/Disable textArea2");
+      enableItem2.setOnAction(actionEvent -> drawerPane.setNodeDisable(textDrawerNode2, !textDrawerNode2.isDisabled()));
+      final MenuItem enableItem3 = new MenuItem("Enable/Disable textArea3");
+      enableItem3.setOnAction(actionEvent -> drawerPane.setNodeDisable(textDrawerNode3, !textDrawerNode3.isDisabled()));
+      final MenuItem enableItem4 = new MenuItem("Enable/Disable textArea4");
+      enableItem4.setOnAction(actionEvent -> drawerPane.setNodeDisable(textDrawerNode4, !textDrawerNode4.isDisabled()));
+      final MenuItem enableItem5 = new MenuItem("Enable/Disable textArea5");
+      enableItem5.setOnAction(actionEvent -> drawerPane.setNodeDisable(textDrawerNode5, !textDrawerNode5.isDisabled()));
+      final MenuItem enableItem6 = new MenuItem("Enable/Disable textArea6");
+      enableItem6.setOnAction(actionEvent -> drawerPane.setNodeDisable(textDrawerNode6, !textDrawerNode6.isDisabled()));
+
+      final Menu enableDisableMenu = new Menu("Enable/Disable");
+      enableDisableMenu.getItems().addAll(enableItem1, enableItem2, enableItem3, enableItem4, enableItem5, enableItem6);
+
+
       final MenuBar menuBar = new MenuBar();
-      menuBar.getMenus().addAll(showMenu, hideMenu);
+      menuBar.getMenus().addAll(showMenu, hideMenu, enableDisableMenu);
 
       return menuBar;
    }

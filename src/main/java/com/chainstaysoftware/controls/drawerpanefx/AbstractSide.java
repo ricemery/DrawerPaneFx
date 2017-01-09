@@ -539,15 +539,11 @@ abstract class AbstractSide extends Pane {
    }
 
    /**
-    * Disable a {@link DrawerNode}'s show/hide button.
-    * And, hide the associated node within the {@link SplitPane} or floating window.
+    * Disable/enable a {@link DrawerNode}'s show/hide button. And, associated node if visible.
     */
    public void disable(final DrawerNode node,
                        final boolean disable) {
-      if (disable) {
-         hideNodeInternal(node);
-      }
-
+      node.setDisable(disable);
       findButton(node).ifPresent(b -> b.setDisable(disable));
    }
 
