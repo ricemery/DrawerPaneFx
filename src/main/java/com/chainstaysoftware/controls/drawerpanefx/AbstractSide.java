@@ -402,7 +402,10 @@ abstract class AbstractSide extends Pane {
       }
 
       private void handleDropped() {
-         splitPane.getItems().remove(node);
+         // Delete the node if the node was moved into another side.
+         if (!findButton(node).isPresent()){
+            splitPane.getItems().remove(node);
+         }
       }
 
       private void handleNotDropped() {
