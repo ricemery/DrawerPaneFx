@@ -1,5 +1,7 @@
 .drawerpanefx-vertical-toolbar {
     -fx-padding: 8 2 2 2;
+    -fx-border-color: -fx-box-border;
+    -fx-border-width: 1 1 1 1;
 }
 
 .drawerpanefx-vertical-button {
@@ -25,6 +27,8 @@
 
 .drawerpanefx-horizontal-toolbar {
     -fx-padding: 2 2 2 2;
+    -fx-border-color: -fx-box-border;
+    -fx-border-width: 1 1 1 1;
 }
 
 .drawerpanefx-horizontal-button {
