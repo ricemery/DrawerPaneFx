@@ -101,10 +101,10 @@ abstract class AbstractSide extends Pane {
          : "drawerpanefx-vertical-toolbar");
 
       if (isHorizontal()) {
-         toolBar.setMinHeight(10);
+         toolBar.setMinHeight(20);
          toolBar.prefWidthProperty().bind(widthProperty());
       } else {
-         toolBar.setMinWidth(10);
+         toolBar.setMinWidth(20);
          toolBar.prefHeightProperty().bind(heightProperty());
       }
 
