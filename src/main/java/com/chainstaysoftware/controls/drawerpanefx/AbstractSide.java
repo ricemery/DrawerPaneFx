@@ -490,9 +490,15 @@ abstract class AbstractSide extends Pane {
       node.setVisible(true);
       splitPane.getItems().remove(node);
       final Stage floatingWindow = new FloatingWindowBuilder().create(getScene().getWindow(), node);
-      floatingWindow.show();
+      node.getFloatingX().ifPresent(floatingWindow::setX);
+      node.getFloatingY().ifPresent(floatingWindow::setY);
       floatingWindow.setOnCloseRequest(event -> findButton(node)
          .ifPresent(toggleButton -> toggleButton.setSelected(false)));
+      floatingWindow.xProperty().addListener((observable, oldValue, newValue)
+         -> node.setFloatingX(newValue.doubleValue()));
+      floatingWindow.yProperty().addListener((observable, oldValue, newValue)
+         -> node.setFloatingY(newValue.doubleValue()));
+      floatingWindow.show();
    }
 
    /**

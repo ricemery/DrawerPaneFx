@@ -80,6 +80,8 @@ public class DrawerPaneSampleApp extends Application {
       textArea1.setPrefWidth(50);
       textDrawerNode1 = new DrawerNode(textArea1, "textArea1", getIcon("/icons8/1-32.png"), true,
          null, Arrays.asList(Position.Top, Position.Right, Position.Bottom, Position.Left));
+      textDrawerNode1.setFloatingX(100);
+      textDrawerNode1.setFloatingY(200);
 
       // Create a DrawerNode that can only be moved to the left or right sides.
       // Initial state is open. Can be floated.

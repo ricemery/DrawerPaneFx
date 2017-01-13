@@ -30,11 +30,6 @@ class FloatingWindowBuilder {
    private Stage createStage(final Window parent,
                              final DrawerNode node) {
       final Stage stg = new Stage(StageStyle.DECORATED);
-      // TODO: Size/position/icon
-      //stg.setWidth(DIALOG_WIDTH);
-      //stg.setHeight(DIALOG_HEIGHT);
-      //stg.setX((owner.getX() + (owner.getWidth() / 2)) - (DIALOG_WIDTH / 2));
-      //stg.setY((owner.getY() + (owner.getHeight() / 2)) - (DIALOG_HEIGHT / 2));
       stg.setResizable(true);
       stg.setTitle(node.getTitle());
       stg.initOwner(parent);

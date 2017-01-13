@@ -25,6 +25,8 @@ public class DrawerNode extends Pane {
    private final List<Position> validPositions;
 
    private boolean isFloating;
+   private Optional<Double> floatingX = Optional.empty();
+   private Optional<Double> floatingY = Optional.empty();
 
    /**
     * Constructor. Defaults icon to null and canFloat to True.
@@ -113,6 +115,34 @@ public class DrawerNode extends Pane {
       }
 
       isFloating = floating;
+   }
+
+   /**
+    * X value to use for the Stage that hosts the {@link DrawerNode} when floating.
+    */
+   public void setFloatingX(final double x) {
+      floatingX = Optional.of(x);
+   }
+
+   /**
+    * The last X value of the Stage that last hosted the {@link DrawerNode} when floating.
+    */
+   public Optional<Double> getFloatingX() {
+      return floatingX;
+   }
+
+   /**
+    * Y value to use for the Stage that hosts the {@link DrawerNode} when floating.
+    */
+   public void setFloatingY(final double y) {
+      floatingY = Optional.of(y);
+   }
+
+   /**
+    * The last Y value of the Stage that last hosted the {@link DrawerNode} when floating.
+    */
+   public Optional<Double> getFloatingY() {
+      return floatingY;
    }
 
    /**
