@@ -493,7 +493,10 @@ abstract class AbstractSide extends Pane {
       node.getFloatingX().ifPresent(floatingWindow::setX);
       node.getFloatingY().ifPresent(floatingWindow::setY);
       floatingWindow.setOnCloseRequest(event -> findButton(node)
-         .ifPresent(toggleButton -> toggleButton.setSelected(false)));
+         .ifPresent(toggleButton -> {
+            toggleButton.setSelected(false);
+            ((Pane)node.getParent()).getChildren().clear();
+         }));
       floatingWindow.xProperty().addListener((observable, oldValue, newValue)
          -> node.setFloatingX(newValue.doubleValue()));
       floatingWindow.yProperty().addListener((observable, oldValue, newValue)
