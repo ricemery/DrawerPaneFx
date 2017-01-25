@@ -28,6 +28,8 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.transform.Rotate;
 import javafx.stage.Stage;
+import javafx.stage.Window;
+import javafx.stage.WindowEvent;
 
 import java.util.List;
 import java.util.Optional;
@@ -545,7 +547,8 @@ abstract class AbstractSide extends Pane {
     */
    private void closeFloatingWindow(DrawerNode node) {
       if (node.isFloating() && node.getScene() != null) {
-         node.getScene().getWindow().hide();
+         final Window stage = node.getScene().getWindow();
+         stage.fireEvent(new WindowEvent(stage, WindowEvent.WINDOW_CLOSE_REQUEST));
       }
    }
 
