@@ -59,6 +59,7 @@ abstract class AbstractSide extends Pane {
    private final Region insertionSpacer = new Region();
 
    private boolean allowMultipleOpenDrawers = true;
+   private boolean floatingSelectedChanged = false;
 
    AbstractSide(final Position position,
                 final DragState dragState) {
@@ -436,6 +437,8 @@ abstract class AbstractSide extends Pane {
       floatingMenuItem.setSelected(node.isFloating());
       floatingMenuItem.selectedProperty()
          .addListener((observable, oldValue, newValue) -> {
+            floatingSelectedChanged = !newValue;
+
             if (oldValue == newValue) {
                return;
             }
@@ -451,6 +454,8 @@ abstract class AbstractSide extends Pane {
                   showNodeInternal(node);
                }
             });
+
+            floatingSelectedChanged = false;
          });
 
 
@@ -495,8 +500,14 @@ abstract class AbstractSide extends Pane {
       node.getFloatingX().ifPresent(floatingWindow::setX);
       node.getFloatingY().ifPresent(floatingWindow::setY);
       floatingWindow.setOnCloseRequest(event -> {
-         findButton(node).ifPresent(toggleButton -> toggleButton.setSelected(false));
-         ((Pane)node.getParent()).getChildren().clear();
+         if (!floatingSelectedChanged) {
+            findButton(node).ifPresent(toggleButton -> toggleButton.setSelected(false));
+         }
+
+         final Pane parent = (Pane) node.getParent();
+         if (parent != null) {
+            parent.getChildren().clear();
+         }
       });
       floatingWindow.xProperty().addListener((observable, oldValue, newValue)
          -> node.setFloatingX(newValue.doubleValue()));
