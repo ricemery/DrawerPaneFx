@@ -34,6 +34,8 @@ import javafx.stage.WindowEvent;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 /**
@@ -41,6 +43,8 @@ import java.util.stream.Collectors;
  * rendered on a side of a {@link DrawerPane}
  */
 abstract class AbstractSide extends Pane {
+   private static Logger logger = Logger.getLogger("com.chainstaysoftware.controls.drawerpanefx.AbstractSide");
+
    // TODO: Allow setting max/min percentage of scene??
    //private static final int SPLITPANE_MIN_WIDTH = 100;
    private static final double MAX_PERCENTAGE_OF_SCENE = .30;
@@ -124,7 +128,11 @@ abstract class AbstractSide extends Pane {
    private class ToolbarDragOverHandler implements EventHandler<DragEvent> {
       @Override
       public void handle(final DragEvent event) {
+         logger.log(Level.FINER, "Handling DragOver event");
+
          if (canAccept(event)) {
+            logger.log(Level.FINER, "Accepting DragOver event");
+
             // Remove the spacer if present.
             toolbarHbox.getChildren().remove(insertionSpacer);
 
@@ -160,6 +168,7 @@ abstract class AbstractSide extends Pane {
    private class ToolbarDragDroppedHandler implements EventHandler<DragEvent> {
       @Override
       public void handle(final DragEvent event) {
+         logger.log(Level.FINER, "Handling DragDropped event");
          boolean success = false;
 
          final DrawerNode drawerNode = dragState.getDraggedNode();
@@ -363,6 +372,8 @@ abstract class AbstractSide extends Pane {
 
       @Override
       public void handle(final MouseEvent event) {
+         logger.log(Level.FINER, "Handling DragDetected event");
+
          final Dragboard db = button.startDragAndDrop(TransferMode.MOVE);
          final ClipboardContent clipboardContent = new ClipboardContent();
          clipboardContent.put(DrawerDataFormat.CLIPBOARD_CONTENT_FORMAT, "foo");
@@ -398,8 +409,10 @@ abstract class AbstractSide extends Pane {
       @Override
       public void handle(final DragEvent event) {
           if (!TransferMode.MOVE.equals(event.getTransferMode())) {
+             logger.log(Level.FINER, "Handling DragDone event - not dropped");
              handleNotDropped();
           } else {
+             logger.log(Level.FINER, "Handling DragDone event - dropped");
              handleDropped();
           }
       }
