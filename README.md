@@ -22,7 +22,7 @@
  and buttons can be styled using CSS.
  
 ## Dependencies
-* None for library.
+* Logback - for logging.
 * Icons from Icons8 - https://icons8.com - for the sample application.
  
 ## Requires

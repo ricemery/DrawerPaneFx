@@ -10,6 +10,7 @@ import javafx.scene.Cursor;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.SnapshotParameters;
+import javafx.scene.control.Button;
 import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.SplitPane;
@@ -30,12 +31,12 @@ import javafx.scene.transform.Rotate;
 import javafx.stage.Stage;
 import javafx.stage.Window;
 import javafx.stage.WindowEvent;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 /**
@@ -43,7 +44,7 @@ import java.util.stream.Collectors;
  * rendered on a side of a {@link DrawerPane}
  */
 abstract class AbstractSide extends Pane {
-   private static Logger logger = Logger.getLogger("com.chainstaysoftware.controls.drawerpanefx.AbstractSide");
+   private static Logger logger = LoggerFactory.getLogger("com.chainstaysoftware.controls.drawerpanefx.AbstractSide");
 
    // TODO: Allow setting max/min percentage of scene??
    //private static final int SPLITPANE_MIN_WIDTH = 100;
@@ -128,10 +129,10 @@ abstract class AbstractSide extends Pane {
    private class ToolbarDragOverHandler implements EventHandler<DragEvent> {
       @Override
       public void handle(final DragEvent event) {
-         logger.log(Level.FINER, "Handling DragOver event");
+         logger.debug("Handling DragOver event");
 
          if (canAccept(event)) {
-            logger.log(Level.FINER, "Accepting DragOver event");
+            logger.debug("Accepting DragOver event");
 
             // Remove the spacer if present.
             toolbarHbox.getChildren().remove(insertionSpacer);
@@ -168,7 +169,7 @@ abstract class AbstractSide extends Pane {
    private class ToolbarDragDroppedHandler implements EventHandler<DragEvent> {
       @Override
       public void handle(final DragEvent event) {
-         logger.log(Level.FINER, "Handling DragDropped event");
+         logger.debug("Handling DragDropped event");
          boolean success = false;
 
          final DrawerNode drawerNode = dragState.getDraggedNode();
@@ -372,7 +373,7 @@ abstract class AbstractSide extends Pane {
 
       @Override
       public void handle(final MouseEvent event) {
-         logger.log(Level.FINER, "Handling DragDetected event");
+         logger.debug("Handling DragDetected event");
 
          final Dragboard db = button.startDragAndDrop(TransferMode.MOVE);
          final ClipboardContent clipboardContent = new ClipboardContent();
@@ -409,10 +410,10 @@ abstract class AbstractSide extends Pane {
       @Override
       public void handle(final DragEvent event) {
           if (!TransferMode.MOVE.equals(event.getTransferMode())) {
-             logger.log(Level.FINER, "Handling DragDone event - not dropped");
+             logger.debug("Handling DragDone event - not dropped");
              handleNotDropped();
           } else {
-             logger.log(Level.FINER, "Handling DragDone event - dropped");
+             logger.debug("Handling DragDone event - dropped");
              handleDropped();
           }
       }
@@ -591,6 +592,7 @@ abstract class AbstractSide extends Pane {
    private Optional<ToggleButton> findButton(final DrawerNode node) {
       final List<Node> buttons = toolbarHbox.getChildren();
       return buttons.stream()
+         .filter(obj -> obj instanceof Button)
          .filter(button -> button.getUserData().equals(node))
          .map(button -> (ToggleButton)button)
          .findFirst();
@@ -625,7 +627,7 @@ abstract class AbstractSide extends Pane {
             return j;
          }
 
-         if (splitPane.getItems().contains(button.getUserData())) {
+         if (button.getUserData() != null && splitPane.getItems().contains(button.getUserData())) {
             j++;
          }
       }
