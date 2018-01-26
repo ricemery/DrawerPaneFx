@@ -592,7 +592,7 @@ abstract class AbstractSide extends Pane {
    private Optional<ToggleButton> findButton(final DrawerNode node) {
       final List<Node> buttons = toolbarHbox.getChildren();
       return buttons.stream()
-         .filter(obj -> obj instanceof Button)
+         .filter(obj -> obj instanceof ToggleButton)
          .filter(button -> button.getUserData().equals(node))
          .map(button -> (ToggleButton)button)
          .findFirst();
